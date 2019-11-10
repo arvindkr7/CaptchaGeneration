@@ -1,0 +1,101 @@
+from tkinter import *
+from tkinter import messagebox
+from numpy import random
+class captcha:
+    def __init__(self,master):
+        self.master=master
+        self.var=IntVar()
+        self.captchanum=0
+        self.captchasum=0
+        self.count=0
+        self.master.title('Python Project Math Captcha')
+        self.master.geometry('700x500')
+        LabelHead=Label(self.master,text='MATHS CAPTCHA',font='sans-serif 35 bold',relief='groove',fg='purple')
+        LabelHead.pack(pady=10,fill=BOTH)
+        framecheck=Frame(self.master)
+        checkbox=Checkbutton(framecheck,text="I'm not a robot",variable=self.var,onvalue=1,offvalue=0)
+        ButtonCheck=Button(framecheck,text='Agree',command=self.frame1)
+        checkbox.pack(side=LEFT)
+        ButtonCheck.pack(side=LEFT)
+        
+        framecheck.pack()
+    
+    def frame1(self):
+        if self.var.get():
+            if self.count==0:
+                self.count=1
+                
+        
+                labelframe=LabelFrame(self.master,text='CAPTCHA',fg='green')
+
+                frame1=Frame(labelframe)
+                
+                self.captchashow=Label(frame1,text='captchatext',font='sans-serif 12 bold', fg='blue')
+                self.captchashow.pack(side=LEFT)
+                self.refresh()  # getting the captcha
+                captcharefresh=Button(frame1,text='Refresh',command=self.refresh)
+                captcharefresh.pack(side=LEFT)
+                frame1.pack()
+
+
+
+                frame2=Frame(labelframe)
+                answer=Label(frame2,text='ANSWER')
+                answer.pack(fill=X)
+                frame2.pack()
+
+
+
+                frame3=Frame(labelframe)
+                self.entrybox=Entry(frame3)
+                self.entrybox.pack(side=LEFT)
+                submitbutton=Button(frame3,text='Submit',command=self.submit)
+                submitbutton.pack(side=LEFT)
+                frame3.pack()
+
+                labelframe.pack()
+            else:
+                messagebox.showwarning('Overload','Click OverRuled, already open')
+        else:
+            messagebox.showwarning('Alert','Agree First, you have not checked')
+        
+    def refresh(self):
+        self.captchanum=random.randint(101)
+        captchastring=str(self.captchanum)
+        l=[]
+        self.captchasum=0
+        for i in captchastring:
+            l.append(i)
+            self.captchasum+=int(i)
+        captchatext='+'.join(l)
+        self.captchashow.configure(text=captchatext)
+        
+        
+    def submit(self):
+        e1=self.entrybox.get()
+        e11=0
+        if e1!="":
+            try:
+                e11=int(e1)  # checking if input is string
+            except:
+                messagebox.showerror('String','can"t be string input')
+                self.refresh()  # updating the cpatcha
+                
+            #e11=int(e1)
+            if e11==self.captchasum:
+                messagebox.showinfo('Success','Verified')
+                self.refresh()   # updating the cpatcha
+            else:
+
+               
+                messagebox.showerror('Wrong','Captcha didn"t match')
+                self.refresh()                  # updating the cpatcha
+        else:
+            messagebox.showerror('Wrong','CAn"t be Empty')
+            self.refresh()       # updating the cpatcha
+        
+        
+    
+root=Tk()
+cap=captcha(root)
+root.mainloop()
